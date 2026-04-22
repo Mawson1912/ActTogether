@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ActTogether.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
         o => o.UseCompatibilityLevel(120)));
+
+// Cookie authentication — redirects unauthenticated users to login
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+    });
 
 var app = builder.Build();
 
@@ -25,6 +33,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Authentication must come before authorization in the pipeline
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
