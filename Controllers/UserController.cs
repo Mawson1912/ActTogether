@@ -26,8 +26,17 @@ namespace ActTogether.Controllers
 
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
+            var friendshipStatus = await _context.Friendships
+                .FirstOrDefaultAsync(f =>
+                    (f.User1Id == currentUserId && f.User2Id == id) ||
+                    (f.User1Id == id && f.User2Id == currentUserId));
+
+            bool isFriend = friendshipStatus != null && friendshipStatus.Status == "Accepted";
+
             ViewBag.CurrentUserId = currentUserId;
             ViewBag.IsOwnProfile = currentUserId == id;
+            ViewBag.FriendshipStatus = friendshipStatus;
+            ViewBag.IsFriend = isFriend;
 
             return View(user);
         }
@@ -70,6 +79,14 @@ namespace ActTogether.Controllers
                     .ToListAsync();
             }
 
+            // Lookup friendship status for each result
+            var userIds = users.Select(u => u.Id).ToList();
+            var friendships = await _context.Friendships
+                .Where(f => (f.User1Id == currentUserId && userIds.Contains(f.User2Id))
+                          || (f.User2Id == currentUserId && userIds.Contains(f.User1Id)))
+                .ToListAsync();
+
+            ViewBag.Friendships = friendships;
             ViewBag.CurrentUserId = currentUserId;
             ViewBag.Query = query;
             return View(users);

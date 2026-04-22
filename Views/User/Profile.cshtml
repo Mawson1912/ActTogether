@@ -1,7 +1,9 @@
 @model ActTogether.Models.User
 @{
     ViewData["Title"] = Model.Username + "'s Profile";
+    var friendship = ViewBag.FriendshipStatus as ActTogether.Models.Friendship;
     bool isOwn = ViewBag.IsOwnProfile;
+    bool isFriend = ViewBag.IsFriend;
     int currentUserId = ViewBag.CurrentUserId;
 }
 
@@ -25,6 +27,35 @@
                 @if (isOwn)
                 {
                     <a asp-action="Edit" class="btn btn-sm btn-outline-primary">Edit Profile</a>
+                }
+                else if (friendship == null)
+                {
+                    <form asp-action="SendRequest" asp-controller="Friendship" asp-route-id="@Model.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-primary">Add Friend</button>
+                    </form>
+                }
+                else if (friendship.Status == "Pending" && friendship.RequestedBy == currentUserId)
+                {
+                    <span class="badge bg-warning">Request Sent</span>
+                }
+                else if (friendship.Status == "Pending" && friendship.RequestedBy != currentUserId)
+                {
+                    <form asp-action="Accept" asp-controller="Friendship" asp-route-id="@friendship.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-success">Accept Request</button>
+                    </form>
+                }
+                else if (friendship.Status == "Accepted")
+                {
+                    <span class="badge bg-success me-2">Friends</span>
+                    <form asp-action="Remove" asp-controller="Friendship" asp-route-id="@Model.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Remove Friend</button>
+                    </form>
+                }
+                else if (friendship.Status == "Blocked" && friendship.BlockedBy == currentUserId)
+                {
+                    <form asp-action="Unblock" asp-controller="Friendship" asp-route-id="@Model.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Unblock</button>
+                    </form>
                 }
             </div>
         </div>
