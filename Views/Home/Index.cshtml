@@ -1,8 +1,53 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<ActTogether.Models.Post>
+@{
+    ViewData["Title"] = "Feed";
+    var userNames = ViewBag.UserNames as Dictionary<int, string>;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="main-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Your Feed</h3>
+        <div>
+            <a asp-controller="Post" asp-action="MyVideos" class="btn btn-outline-primary me-2">My Videos</a>
+            <a asp-controller="Post" asp-action="Create" class="btn btn-primary">Share a Video</a>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        @foreach (var post in Model)
+        {
+            var posterName = userNames != null && userNames.ContainsKey(post.UserId) ? userNames[post.UserId] : "Unknown";
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5>@post.Title</h5>
+                        <span class="text-muted small">@post.PostedAt.ToString("dd MMM yyyy HH:mm")</span>
+                    </div>
+                    <p class="text-muted small">Posted by <a asp-controller="User" asp-action="Profile" asp-route-id="@post.UserId">@posterName</a></p>
+                    @if (!string.IsNullOrEmpty(post.Description))
+                    {
+                        <p>@Html.Raw(post.Description.Replace("\n", "<br />"))</p>
+                    }
+                    @if (post.VideoUrl.Contains("drive.google.com/file/d/"))
+                    {
+                        var fileId = post.VideoUrl.Split("/file/d/")[1].Split("/")[0];
+                        <a href="@post.VideoUrl" target="_blank">
+                            <img src="https://drive.google.com/thumbnail?id=@fileId&sz=w640" referrerpolicy="no-referrer" class="img-fluid rounded mb-2" alt="@post.Title" />
+                        </a>
+                    }
+                    <div class="video-buttons">
+                        <a href="@post.VideoUrl" target="_blank" class="btn btn-sm btn-outline-primary">Watch Video</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="text-center mt-5">
+            <h4>No posts in your feed yet!</h4>
+            <p class="text-muted">Add friends to see their videos here.</p>
+        </div>
+    }
 </div>
