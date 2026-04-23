@@ -1,0 +1,65 @@
+@model List<ActTogether.Models.Message>
+@{
+    var otherUser = ViewBag.OtherUser as ActTogether.Models.User;
+    int currentUserId = ViewBag.CurrentUserId;
+    ViewData["Title"] = "Chat with " + otherUser?.Username;
+}
+
+<div class="main-content">
+    <a asp-action="Inbox" class="btn btn-sm btn-outline-secondary mb-3">&larr; Back to Messages</a>
+
+    <div class="d-flex align-items-center mb-3">
+        <div class="me-3">
+            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                <span class="text-white" style="font-size: 1.5rem;">@otherUser?.Username.Substring(0, 1).ToUpper()</span>
+            </div>
+        </div>
+        <div>
+            <h3 class="mb-0">Conversation with @otherUser?.Username</h3>
+            @if (!string.IsNullOrEmpty(otherUser?.FullName))
+            {
+                <p class="text-muted mb-0">@otherUser.FullName</p>
+            }
+        </div>
+    </div>
+
+    <div id="chat-container" class="card mb-3" style="max-height: 70vh; overflow-y: auto;">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                @foreach (var msg in Model)
+                {
+                    var isMe = msg.SenderId == currentUserId;
+                    <div class="mb-2 @(isMe ? "text-end" : "")">
+                        <div class="d-inline-block p-2 rounded @(isMe ? "bg-primary text-white" : "bg-light")" style="max-width: 75%;">
+                            @Html.Raw(msg.Content.Replace("\n", "<br />"))
+                        </div>
+                        <div class="text-muted small">@msg.SentAt.ToString("dd MMM HH:mm")</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">No messages yet. Start the conversation!</p>
+            }
+        </div>
+    </div>
+
+    <form asp-action="Send" method="post">
+        <input type="hidden" name="receiverId" value="@otherUser?.Id" />
+        <div class="input-group">
+            <input name="content" class="form-control" placeholder="Type a message..." required />
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-scroll chat to bottom so latest messages are visible
+        var chatContainer = document.getElementById('chat-container');
+        if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+}

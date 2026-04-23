@@ -48,6 +48,7 @@
                 else if (friendship.Status == "Accepted")
                 {
                     <span class="badge bg-success me-2">Friends</span>
+                    <a asp-action="Conversation" asp-controller="Message" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary me-2">Message</a>
                     <form asp-action="Remove" asp-controller="Friendship" asp-route-id="@Model.Id" method="post" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-outline-danger">Remove Friend</button>
                     </form>
