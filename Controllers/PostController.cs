@@ -54,6 +54,7 @@ namespace ActTogether.Controllers
 
             if (post != null)
             {
+                _context.Feedbacks.RemoveRange(_context.Feedbacks.Where(f => f.PostId == id));
                 _context.Posts.Remove(post);
                 await _context.SaveChangesAsync();
             }
@@ -61,7 +62,7 @@ namespace ActTogether.Controllers
             return RedirectToAction("MyVideos");
         }
 
-        // GET: /Post/MyVideos — shows own posts (basic version, no feedback yet)
+        // GET: /Post/MyVideos — shows own posts with private feedback
         public async Task<IActionResult> MyVideos(int page = 1)
         {
             const int pageSize = 10;
@@ -79,7 +80,45 @@ namespace ActTogether.Controllers
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = (int)Math.Ceiling(totalPosts / (double)pageSize);
 
+            var postIds = posts.Select(p => p.Id).ToList();
+
+            // Get feedback for all of user's posts
+            var feedbacks = await _context.Feedbacks
+                .Where(f => postIds.Contains(f.PostId))
+                .OrderBy(f => f.CreatedAt)
+                .ToListAsync();
+
+            // Map sender IDs to usernames
+            var senderIds = feedbacks.Select(f => f.SenderId).Distinct().ToList();
+            ViewBag.SenderNames = await _context.Users
+                .Where(u => senderIds.Contains(u.Id))
+                .ToDictionaryAsync(u => u.Id, u => u.Username);
+
+            // Group feedback by PostId for easy lookup in view
+            ViewBag.FeedbackByPost = feedbacks.GroupBy(f => f.PostId)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
             return View(posts);
+        }
+
+        // POST: /Post/GiveFeedback — friend leaves feedback on a post
+        [HttpPost]
+        public async Task<IActionResult> GiveFeedback(int postId, string content)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var feedback = new Feedback
+            {
+                PostId = postId,
+                SenderId = userId,
+                Content = content,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.Feedbacks.Add(feedback);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

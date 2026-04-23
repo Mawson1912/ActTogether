@@ -103,8 +103,24 @@
                             {
                                 <button onclick="deletePost(@post.Id, this)" class="btn btn-sm btn-outline-danger ms-2">Delete</button>
                             }
+                            else if (isFriend)
+                            {
+                                <button class="btn btn-sm btn-outline-success ms-2" data-bs-toggle="collapse" data-bs-target="#feedback-@post.Id">Give Feedback</button>
+                            }
                         </div>
-                        <span class="text-muted small float-end me-2">@post.PostedAt.ToString("dd MMM yyyy")</span>
+                            @if (isFriend && !isOwn)
+                            {
+                                <div class="collapse mt-2" id="feedback-@post.Id">
+                                    <form asp-controller="Post" asp-action="GiveFeedback" method="post">
+                                        <input type="hidden" name="postId" value="@post.Id" />
+                                        <div class="mb-2">
+                                            <textarea name="content" class="form-control" rows="2" placeholder="Share your feedback on this video..." required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-sm btn-success">Submit Feedback</button>
+                                    </form>
+                                </div>
+                            }
+                            <span class="text-muted small float-end me-2">@post.PostedAt.ToString("dd MMM yyyy")</span>
                     </div>
                 </div>
             }

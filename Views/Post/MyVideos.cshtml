@@ -1,6 +1,8 @@
 @model List<ActTogether.Models.Post>
 @{
     ViewData["Title"] = "My Videos";
+    var feedbackByPost = ViewBag.FeedbackByPost as Dictionary<int, List<ActTogether.Models.Feedback>>;
+    var senderNames = ViewBag.SenderNames as Dictionary<int, string>;
     int currentPage = ViewBag.CurrentPage ?? 1;
     int totalPages = ViewBag.TotalPages ?? 1;
 }
@@ -38,9 +40,40 @@
                         <a href="@post.VideoUrl" target="_blank" class="btn btn-sm btn-outline-primary">Watch Video</a>
                         <button onclick="deletePost(@post.Id, this)" class="btn btn-sm btn-outline-danger ms-2">Delete</button>
                     </div>
-                </div>
+
+                @{
+                    var hasFeedback = feedbackByPost != null && feedbackByPost.ContainsKey(post.Id);
+                    var fbCount = hasFeedback ? feedbackByPost[post.Id].Count : 0;
+                }
+                <hr />
+                @if (hasFeedback)
+                {
+                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#fb-@post.Id">
+                        Feedback (@fbCount)
+                    </button>
+                    <div class="collapse mt-2" id="fb-@post.Id">
+                        @foreach (var fb in feedbackByPost[post.Id])
+                        {
+                            var senderName = senderNames != null && senderNames.ContainsKey(fb.SenderId) ? senderNames[fb.SenderId] : "Deleted";
+                            <div class="card bg-light mb-2">
+                                <div class="card-body py-2 px-3">
+                                    <div class="d-flex justify-content-between">
+                                        <strong><a asp-controller="User" asp-action="Profile" asp-route-id="@fb.SenderId">@senderName</a></strong>
+                                        <span class="text-muted small">@fb.CreatedAt.ToString("dd MMM yyyy HH:mm")</span>
+                                    </div>
+                                    <p class="mb-0 mt-1">@Html.Raw(fb.Content.Replace("\n", "<br />"))</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted small mb-0">No feedback yet.</p>
+                }
             </div>
-        }
+        </div>
+    }
 
         @if (totalPages > 1)
         {

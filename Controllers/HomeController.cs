@@ -38,7 +38,16 @@ namespace ActTogether.Controllers
                 .Where(u => friendIds.Contains(u.Id))
                 .ToDictionaryAsync(u => u.Id, u => u.Username);
 
+            // Track which posts this user has already given feedback on
+            var postIds = posts.Select(p => p.Id).ToList();
+            var reviewedPostIds = await _context.Feedbacks
+                .Where(f => f.SenderId == userId && postIds.Contains(f.PostId))
+                .Select(f => f.PostId)
+                .Distinct()
+                .ToListAsync();
+
             ViewBag.UserNames = userNames;
+            ViewBag.ReviewedPostIds = new HashSet<int>(reviewedPostIds);
             return View(posts);
         }
 

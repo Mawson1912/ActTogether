@@ -2,6 +2,9 @@
 @{
     ViewData["Title"] = "Feed";
     var userNames = ViewBag.UserNames as Dictionary<int, string>;
+    var reviewedPostIds = ViewBag.ReviewedPostIds as HashSet<int> ?? new HashSet<int>();
+    var unreviewed = Model.Where(p => !reviewedPostIds.Contains(p.Id)).ToList();
+    var reviewed = Model.Where(p => reviewedPostIds.Contains(p.Id)).ToList();
 }
 
 <div class="main-content">
@@ -15,7 +18,7 @@
 
     @if (Model.Any())
     {
-        @foreach (var post in Model)
+        @foreach (var post in unreviewed)
         {
             var posterName = userNames != null && userNames.ContainsKey(post.UserId) ? userNames[post.UserId] : "Unknown";
             <div class="card mb-3">
@@ -38,16 +41,72 @@
                     }
                     <div class="video-buttons">
                         <a href="@post.VideoUrl" target="_blank" class="btn btn-sm btn-outline-primary">Watch Video</a>
+                        <button class="btn btn-sm btn-outline-success ms-2" data-bs-toggle="collapse" data-bs-target="#feedback-@post.Id">Give Feedback</button>
                     </div>
+                <div class="collapse mt-2" id="feedback-@post.Id">
+                    <form asp-controller="Post" asp-action="GiveFeedback" method="post">
+                        <input type="hidden" name="postId" value="@post.Id" />
+                        <div class="mb-2">
+                            <textarea name="content" class="form-control" rows="2" placeholder="Share your feedback on this video..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-success">Submit Feedback</button>
+                    </form>
                 </div>
             </div>
-        }
-    }
-    else
-    {
-        <div class="text-center mt-5">
-            <h4>No posts in your feed yet!</h4>
-            <p class="text-muted">Add friends to see their videos here.</p>
         </div>
     }
+
+    @if (reviewed.Any())
+    {
+        <button class="btn btn-sm btn-outline-secondary mb-3" data-bs-toggle="collapse" data-bs-target="#reviewed-section">
+            Already Reviewed (@reviewed.Count)
+        </button>
+        <div class="collapse" id="reviewed-section">
+            @foreach (var post in reviewed)
+            {
+                var posterName = userNames != null && userNames.ContainsKey(post.UserId) ? userNames[post.UserId] : "Unknown";
+                <div class="card mb-3 opacity-75">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5>@post.Title</h5>
+                            <span class="text-muted small">@post.PostedAt.ToString("dd MMM yyyy HH:mm")</span>
+                        </div>
+                        <p class="text-muted small">Posted by <a asp-controller="User" asp-action="Profile" asp-route-id="@post.UserId">@posterName</a></p>
+                        @if (!string.IsNullOrEmpty(post.Description))
+                        {
+                            <p>@Html.Raw(post.Description.Replace("\n", "<br />"))</p>
+                        }
+                        @if (post.VideoUrl.Contains("drive.google.com/file/d/"))
+                        {
+                            var fileId = post.VideoUrl.Split("/file/d/")[1].Split("/")[0];
+                            <a href="@post.VideoUrl" target="_blank">
+                                <img src="https://drive.google.com/thumbnail?id=@fileId&sz=w640" referrerpolicy="no-referrer" class="img-fluid rounded mb-2" alt="@post.Title" />
+                            </a>
+                        }
+                        <div class="video-buttons">
+                            <a href="@post.VideoUrl" target="_blank" class="btn btn-sm btn-outline-primary">Watch Video</a>
+                            <button class="btn btn-sm btn-outline-success ms-2" data-bs-toggle="collapse" data-bs-target="#feedback-@post.Id">Give More Feedback</button>
+                        </div>
+                        <div class="collapse mt-2" id="feedback-@post.Id">
+                            <form asp-controller="Post" asp-action="GiveFeedback" method="post">
+                                <input type="hidden" name="postId" value="@post.Id" />
+                                <div class="mb-2">
+                                    <textarea name="content" class="form-control" rows="2" placeholder="Share your feedback on this video..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-success">Submit Feedback</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+else
+{
+    <div class="text-center mt-5">
+        <h4>No posts in your feed yet!</h4>
+        <p class="text-muted">Add friends to see their videos here.</p>
+    </div>
+}
 </div>
