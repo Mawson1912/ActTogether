@@ -1,0 +1,62 @@
+@model List<ActTogether.Models.Report>
+@{
+    ViewData["Title"] = "User Reports";
+    var userNames = ViewBag.UserNames as Dictionary<int, string>;
+}
+
+<div class="main-content">
+    <h2>User Reports</h2>
+    <a asp-action="Dashboard" class="btn btn-sm btn-outline-secondary mb-3">Back to Dashboard</a>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">@TempData["Message"]</div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Reporter</th>
+                        <th>Reported User</th>
+                        <th>Reason</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var report in Model)
+                    {
+                        var reporterName = userNames != null && userNames.ContainsKey(report.ReporterId) ? userNames[report.ReporterId] : "Deleted";
+                        var reportedName = userNames != null && userNames.ContainsKey(report.ReportedUserId) ? userNames[report.ReportedUserId] : "Deleted";
+                        <tr>
+                            <td>@reporterName</td>
+                            <td>@reportedName</td>
+                            <td>@report.Reason</td>
+                            <td>@report.CreatedAt.ToString("dd MMM yyyy HH:mm")</td>
+                            <td>
+                                @if (userNames != null && userNames.ContainsKey(report.ReportedUserId))
+                                {
+                                    <form asp-action="DeleteUser" asp-route-id="@report.ReportedUserId" method="post" class="d-inline"
+                                          onsubmit="return confirm('Remove this user and all their data?');">
+                                        <button type="submit" class="btn btn-sm btn-danger">Remove User</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Already removed</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No reports.</p>
+    }
+</div>

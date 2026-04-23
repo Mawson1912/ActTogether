@@ -12,5 +12,7 @@ namespace ActTogether.Data
         public DbSet<Friendship> Friendships { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<ContactMessage> ContactMessages { get; set; }
+        public DbSet<Report> Reports { get; set; }
     }
 }

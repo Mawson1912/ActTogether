@@ -47,6 +47,32 @@ namespace ActTogether.Controllers
             return View();
         }
 
+        [Authorize]
+        public IActionResult ContactUs()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ContactUs(string message)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var contactMessage = new ContactMessage
+            {
+                UserId = userId,
+                Message = message,
+                SentAt = DateTime.Now
+            };
+
+            _context.ContactMessages.Add(contactMessage);
+            await _context.SaveChangesAsync();
+
+            ViewBag.Submitted = true;
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

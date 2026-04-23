@@ -102,5 +102,26 @@ namespace ActTogether.Controllers
             ViewBag.Query = query;
             return View(users);
         }
+
+        // POST: /User/Report
+        [HttpPost]
+        public async Task<IActionResult> Report(int reportedUserId, string reason)
+        {
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var report = new Report
+            {
+                ReporterId = currentUserId,
+                ReportedUserId = reportedUserId,
+                Reason = reason,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.Reports.Add(report);
+            await _context.SaveChangesAsync();
+
+            TempData["Message"] = "User reported successfully.";
+            return RedirectToAction("Profile", new { id = reportedUserId });
+        }
     }
 }

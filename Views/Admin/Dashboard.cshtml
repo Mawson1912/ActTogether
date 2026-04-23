@@ -1,0 +1,30 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="main-content">
+    <a href="javascript:history.back()" class="btn btn-sm btn-outline-secondary mb-3">&larr; Back</a>
+
+    <h2>Admin Dashboard</h2>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Contact Messages</h5>
+                    <p class="text-muted">View messages submitted via the Contact Us form.</p>
+                    <a asp-action="ContactMessages" class="btn btn-primary">View Messages</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>User Reports</h5>
+                    <p class="text-muted">View reports and remove users from the platform.</p>
+                    <a asp-action="Reports" class="btn btn-danger">View Reports</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<div class="main-content">
+    <a href="javascript:history.back()" class="btn btn-sm btn-outline-secondary mb-3">&larr; Back</a>
+
+    <h2>Contact Us</h2>
+
+    @if (ViewBag.Submitted == true)
+    {
+        <div class="alert alert-success">
+            Thank you for your message! We'll get back to you soon.
+        </div>
+    }
+    else
+    {
+        <p>Have a question or feedback? Send us a message below.</p>
+        <p class="text-muted small">Submitting as <strong>@User.Identity.Name</strong></p>
+
+        <form method="post" asp-action="ContactUs" asp-controller="Home">
+            <div class="mb-3">
+                <label class="form-label">Message</label>
+                <textarea name="message" class="form-control" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+    }
+</div>

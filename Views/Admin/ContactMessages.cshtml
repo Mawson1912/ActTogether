@@ -1,0 +1,47 @@
+@model List<ActTogether.Models.ContactMessage>
+@{
+    ViewData["Title"] = "Contact Messages";
+    var userNames = ViewBag.UserNames as Dictionary<int, string>;
+}
+
+<div class="main-content">
+    <h2>Contact Messages</h2>
+    <a asp-action="Dashboard" class="btn btn-sm btn-outline-secondary mb-3">Back to Dashboard</a>
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Message</th>
+                        <th>Sent</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var msg in Model)
+                    {
+                        var username = userNames != null && userNames.ContainsKey(msg.UserId) ? userNames[msg.UserId] : "Deleted";
+                        <tr>
+                            <td>@username</td>
+                            <td>@msg.Message</td>
+                            <td>@msg.SentAt.ToString("dd MMM yyyy HH:mm")</td>
+                            <td>
+                                @if (userNames != null && userNames.ContainsKey(msg.UserId))
+                                {
+                                    <a asp-controller="Message" asp-action="Conversation" asp-route-id="@msg.UserId" class="btn btn-sm btn-primary">Reply</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No contact messages yet.</p>
+    }
+</div>

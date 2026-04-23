@@ -59,6 +59,20 @@
                         <button type="submit" class="btn btn-sm btn-outline-secondary">Unblock</button>
                     </form>
                 }
+                @if (!isOwn)
+                {
+                    <hr />
+                    <button class="btn btn-sm btn-outline-warning" data-bs-toggle="collapse" data-bs-target="#reportForm">Report User</button>
+                    <div class="collapse mt-2" id="reportForm">
+                        <form asp-action="Report" asp-controller="User" method="post">
+                            <input type="hidden" name="reportedUserId" value="@Model.Id" />
+                            <div class="mb-2">
+                                <textarea name="reason" class="form-control" rows="2" placeholder="Reason for report" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-warning">Submit Report</button>
+                        </form>
+                    </div>
+                }
             </div>
         </div>
     </div>
