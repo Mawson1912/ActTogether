@@ -33,6 +33,17 @@ namespace ActTogether.Controllers
 
             bool isFriend = friendshipStatus != null && friendshipStatus.Status == "Accepted";
 
+            // Only show posts to the user themselves or confirmed friends
+            var posts = new List<Post>();
+            if (currentUserId == id || isFriend)
+            {
+                posts = await _context.Posts
+                    .Where(p => p.UserId == id)
+                    .OrderByDescending(p => p.PostedAt)
+                    .ToListAsync();
+            }
+
+            ViewBag.Posts = posts;
             ViewBag.CurrentUserId = currentUserId;
             ViewBag.IsOwnProfile = currentUserId == id;
             ViewBag.FriendshipStatus = friendshipStatus;

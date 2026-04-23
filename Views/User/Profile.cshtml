@@ -5,6 +5,7 @@
     bool isOwn = ViewBag.IsOwnProfile;
     bool isFriend = ViewBag.IsFriend;
     int currentUserId = ViewBag.CurrentUserId;
+    var posts = ViewBag.Posts as List<ActTogether.Models.Post>;
 }
 
 <a href="javascript:history.back()" class="btn btn-sm btn-outline-secondary mb-3">&larr; Back</a>
@@ -63,6 +64,54 @@
 
     <div class="col-md-8">
         <h4>Posts</h4>
-        <p class="text-muted">Posts will be added in a future update.</p>
+        @if (posts != null && posts.Any())
+        {
+            @foreach (var post in posts)
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5>@post.Title</h5>
+                        @if (!string.IsNullOrEmpty(post.Description))
+                        {
+                            <p>@Html.Raw(post.Description.Replace("\n", "<br />"))</p>
+                        }
+                        @if (post.VideoUrl.Contains("drive.google.com/file/d/"))
+                        {
+                            var fileId = post.VideoUrl.Split("/file/d/")[1].Split("/")[0];
+                            <a href="@post.VideoUrl" target="_blank">
+                                <img src="https://drive.google.com/thumbnail?id=@fileId&sz=w640" referrerpolicy="no-referrer" class="img-fluid rounded mb-2" alt="@post.Title" />
+                            </a>
+                        }
+                        <div class="video-buttons">
+                            <a href="@post.VideoUrl" target="_blank" class="btn btn-sm btn-outline-primary">Watch Video</a>
+                            @if (isOwn)
+                            {
+                                <button onclick="deletePost(@post.Id, this)" class="btn btn-sm btn-outline-danger ms-2">Delete</button>
+                            }
+                        </div>
+                        <span class="text-muted small float-end me-2">@post.PostedAt.ToString("dd MMM yyyy")</span>
+                    </div>
+                </div>
+            }
+        }
+        else if (!isOwn && !isFriend)
+        {
+            <p class="text-muted">Add @Model.Username as a friend to see their posts.</p>
+        }
+        else
+        {
+            <p class="text-muted">No posts yet.</p>
+        }
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function deletePost(postId, btn) {
+            if (confirm('Delete this post?')) {
+                fetch('/Post/Delete/' + postId, { method: 'POST' })
+                    .then(() => window.location.reload());
+            }
+        }
+    </script>
+}

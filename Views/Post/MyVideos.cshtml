@@ -1,0 +1,83 @@
+@model List<ActTogether.Models.Post>
+@{
+    ViewData["Title"] = "My Videos";
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+}
+
+<div class="main-content">
+    <a href="javascript:history.back()" class="btn btn-sm btn-outline-secondary mb-3">&larr; Back</a>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>My Videos</h3>
+        <a asp-controller="Post" asp-action="Create" class="btn btn-primary">Share a Video</a>
+    </div>
+
+    @if (Model.Any())
+    {
+        @foreach (var post in Model)
+        {
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5>@post.Title</h5>
+                        <span class="text-muted small">@post.PostedAt.ToString("dd MMM yyyy HH:mm")</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(post.Description))
+                    {
+                        <p>@Html.Raw(post.Description.Replace("\n", "<br />"))</p>
+                    }
+                    @if (post.VideoUrl.Contains("drive.google.com/file/d/"))
+                    {
+                        var fileId = post.VideoUrl.Split("/file/d/")[1].Split("/")[0];
+                        <a href="@post.VideoUrl" target="_blank">
+                            <img src="https://drive.google.com/thumbnail?id=@fileId&sz=w640" referrerpolicy="no-referrer" class="img-fluid rounded mb-2" alt="@post.Title" />
+                        </a>
+                    }
+                    <div class="video-buttons">
+                        <a href="@post.VideoUrl" target="_blank" class="btn btn-sm btn-outline-primary">Watch Video</a>
+                        <button onclick="deletePost(@post.Id, this)" class="btn btn-sm btn-outline-danger ms-2">Delete</button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (totalPages > 1)
+        {
+            <nav>
+                <ul class="pagination justify-content-center mt-4">
+                    @if (currentPage > 1)
+                    {
+                        <li class="page-item"><a class="page-link" asp-action="MyVideos" asp-route-page="@(currentPage - 1)">&laquo; Prev</a></li>
+                    }
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")"><a class="page-link" asp-action="MyVideos" asp-route-page="@i">@i</a></li>
+                    }
+                    @if (currentPage < totalPages)
+                    {
+                        <li class="page-item"><a class="page-link" asp-action="MyVideos" asp-route-page="@(currentPage + 1)">Next &raquo;</a></li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+    else
+    {
+        <div class="text-center mt-5">
+            <h4>No videos yet!</h4>
+            <p class="text-muted">Share your first video to get feedback from friends.</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function deletePost(postId, btn) {
+            if (confirm('Delete this post?')) {
+                fetch('/Post/Delete/' + postId, { method: 'POST' })
+                    .then(() => window.location.reload());
+            }
+        }
+    </script>
+}
