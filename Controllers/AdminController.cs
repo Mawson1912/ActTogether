@@ -72,10 +72,12 @@ namespace ActTogether.Controllers
             if (user == null) return NotFound();
 
             // Remove all related data
+            var userPostIds = _context.Posts.Where(p => p.UserId == id).Select(p => p.Id).ToList();
+            _context.Feedbacks.RemoveRange(_context.Feedbacks.Where(f => userPostIds.Contains(f.PostId) || f.SenderId == id));
+            _context.DismissedPosts.RemoveRange(_context.DismissedPosts.Where(d => userPostIds.Contains(d.PostId) || d.UserId == id));
             _context.Messages.RemoveRange(_context.Messages.Where(m => m.SenderId == id || m.ReceiverId == id));
             _context.Posts.RemoveRange(_context.Posts.Where(p => p.UserId == id));
             _context.Friendships.RemoveRange(_context.Friendships.Where(f => f.User1Id == id || f.User2Id == id));
-            _context.ContactMessages.RemoveRange(_context.ContactMessages.Where(c => c.UserId == id));
             _context.Reports.RemoveRange(_context.Reports.Where(r => r.ReporterId == id || r.ReportedUserId == id));
             _context.Users.Remove(user);
 

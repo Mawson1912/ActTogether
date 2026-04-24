@@ -141,5 +141,29 @@ namespace ActTogether.Controllers
             return RedirectToAction("Login", "Account");
         }
 
+        // POST: /Account/DeleteAccount — removes all user data and signs out
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DeleteAccount()
+        {
+            var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return NotFound();
+
+            var userPostIds = _context.Posts.Where(p => p.UserId == userId).Select(p => p.Id).ToList();
+            _context.Feedbacks.RemoveRange(_context.Feedbacks.Where(f => userPostIds.Contains(f.PostId) || f.SenderId == userId));
+            _context.DismissedPosts.RemoveRange(_context.DismissedPosts.Where(d => userPostIds.Contains(d.PostId) || d.UserId == userId));
+            _context.Messages.RemoveRange(_context.Messages.Where(m => m.SenderId == userId || m.ReceiverId == userId));
+            _context.Posts.RemoveRange(_context.Posts.Where(p => p.UserId == userId));
+            _context.Friendships.RemoveRange(_context.Friendships.Where(f => f.User1Id == userId || f.User2Id == userId));
+            _context.Reports.RemoveRange(_context.Reports.Where(r => r.ReporterId == userId || r.ReportedUserId == userId));
+            _context.ContactMessages.RemoveRange(_context.ContactMessages.Where(c => c.UserId == userId));
+            _context.Users.Remove(user);
+
+            await _context.SaveChangesAsync();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return RedirectToAction("Login", "Account");
+        }
     }
 }
