@@ -25,11 +25,27 @@
             var posterName = userNames != null && userNames.ContainsKey(post.UserId) ? userNames[post.UserId] : "Unknown";
             <div class="card mb-3">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5>@post.Title</h5>
-                        <span class="text-muted small">@post.PostedAt.ToString("dd MMM yyyy HH:mm")</span>
+                    <div class="d-flex align-items-start mb-2">
+                        <div class="me-2">
+                            @if (!string.IsNullOrEmpty(post.User?.ProfileImageUrl))
+                            {
+                                <img src="@post.User.ProfileImageUrl" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <span class="text-white" style="font-size: 1rem;">@posterName.Substring(0, 1).ToUpper()</span>
+                                </div>
+                            }
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                                <h5>@post.Title</h5>
+                                <span class="text-muted small">@post.PostedAt.ToString("dd MMM yyyy HH:mm")</span>
+                            </div>
+                            <p class="text-muted small mb-0">Posted by <a asp-controller="User" asp-action="Profile" asp-route-id="@post.UserId">@posterName</a></p>
+                        </div>
                     </div>
-                    <p class="text-muted small">Posted by <a asp-controller="User" asp-action="Profile" asp-route-id="@post.UserId">@posterName</a></p>
                     @if (!string.IsNullOrEmpty(post.Description))
                     {
                         <p>@Html.Raw(post.Description.Replace("\n", "<br />"))</p>
@@ -69,11 +85,27 @@
                 var posterName = userNames != null && userNames.ContainsKey(post.UserId) ? userNames[post.UserId] : "Unknown";
                 <div class="card mb-3 opacity-75">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <h5>@post.Title</h5>
-                            <span class="text-muted small">@post.PostedAt.ToString("dd MMM yyyy HH:mm")</span>
+                        <div class="d-flex align-items-start mb-2">
+                            <div class="me-2">
+                                @if (!string.IsNullOrEmpty(post.User?.ProfileImageUrl))
+                                {
+                                    <img src="@post.User.ProfileImageUrl" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <span class="text-white" style="font-size: 1rem;">@posterName.Substring(0, 1).ToUpper()</span>
+                                    </div>
+                                }
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between">
+                                    <h5>@post.Title</h5>
+                                    <span class="text-muted small">@post.PostedAt.ToString("dd MMM yyyy HH:mm")</span>
+                                </div>
+                                <p class="text-muted small mb-0">Posted by <a asp-controller="User" asp-action="Profile" asp-route-id="@post.UserId">@posterName</a></p>
+                            </div>
                         </div>
-                        <p class="text-muted small">Posted by <a asp-controller="User" asp-action="Profile" asp-route-id="@post.UserId">@posterName</a></p>
                         @if (!string.IsNullOrEmpty(post.Description))
                         {
                             <p>@Html.Raw(post.Description.Replace("\n", "<br />"))</p>

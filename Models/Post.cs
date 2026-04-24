@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ActTogether.Models
 {
@@ -12,8 +11,6 @@ namespace ActTogether.Models
         [MaxLength(500)]
         public string Description { get; set; }
         public DateTime PostedAt { get; set; }
-
-        [ForeignKey("UserId")]
         public User User { get; set; }
     }
 }

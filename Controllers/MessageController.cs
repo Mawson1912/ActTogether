@@ -45,7 +45,12 @@ namespace ActTogether.Controllers
                 .Where(u => otherUserIds.Contains(u.Id))
                 .ToDictionaryAsync(u => u.Id, u => u.Username);
 
+            var profileImageUrls = await _context.Users
+                .Where(u => otherUserIds.Contains(u.Id))
+                .ToDictionaryAsync(u => u.Id, u => u.ProfileImageUrl);
+
             ViewBag.UserNames = userNames;
+            ViewBag.ProfileImageUrls = profileImageUrls;
             ViewBag.Conversations = conversations.Select(c => new {
                 c.OtherUserId,
                 Preview = c.LatestMessage.Content.Length > 60

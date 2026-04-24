@@ -8,6 +8,7 @@ using ActTogether.Models;
 using ActTogether.Data;
 using ActTogether.Helpers;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace ActTogether.Controllers
 {
@@ -93,6 +94,36 @@ namespace ActTogether.Controllers
                         return View(model);
                     }
 
+                    string profileImageUrl = null;
+                    if (model.ProfileImage != null)
+                    {
+                        // Validate file size (2MB limit)
+                        if (model.ProfileImage.Length > 2 * 1024 * 1024)
+                        {
+                            ModelState.AddModelError("ProfileImage", "Profile image must be less than 2MB");
+                            return View(model);
+                        }
+
+                        // Validate file type
+                        string[] allowedTypes = { "image/jpeg", "image/jpg", "image/png" };
+                        if (!allowedTypes.Contains(model.ProfileImage.ContentType))
+                        {
+                            ModelState.AddModelError("ProfileImage", "Profile image must be JPEG or PNG");
+                            return View(model);
+                        }
+
+                        // Save file
+                        string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "profiles");
+                        Directory.CreateDirectory(uploadsFolder);
+                        string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ProfileImage.FileName);
+                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await model.ProfileImage.CopyToAsync(fileStream);
+                        }
+                        profileImageUrl = "/uploads/profiles/" + uniqueFileName;
+                    }
+
                     var user = new User
                     {
                         Username = model.Username,
@@ -100,7 +131,8 @@ namespace ActTogether.Controllers
                         PasswordHash = PasswordHelper.Hash(model.Password),
                         FullName = model.FullName,
                         Bio = model.Bio,
-                        CreatedAt = DateTime.Now
+                        CreatedAt = DateTime.Now,
+                        ProfileImageUrl = profileImageUrl
                     };
 
                     _context.Users.Add(user);

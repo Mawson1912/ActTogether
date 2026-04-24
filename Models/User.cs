@@ -11,6 +11,7 @@ namespace ActTogether.Models
         public string FullName { get; set; }
         [MaxLength(500)]
         public string Bio { get; set; }
+        public string? ProfileImageUrl { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsAdmin { get; set; }
     }

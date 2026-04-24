@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using ActTogether.Data;
 using ActTogether.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace ActTogether.Controllers
 {
@@ -63,7 +64,7 @@ namespace ActTogether.Controllers
 
         // POST: /User/Edit
         [HttpPost]
-        public async Task<IActionResult> Edit(User model)
+        public async Task<IActionResult> Edit(User model, IFormFile ProfileImage)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
@@ -71,6 +72,35 @@ namespace ActTogether.Controllers
 
             user.FullName = model.FullName;
             user.Bio = model.Bio;
+
+            if (ProfileImage != null)
+            {
+                string[] allowedTypes = { "image/jpeg", "image/jpg", "image/png" };
+                if (!allowedTypes.Contains(ProfileImage.ContentType))
+                {
+                    ModelState.AddModelError("ProfileImage", "Only JPEG and PNG images are allowed");
+                    return View(user);
+                }
+
+                if (ProfileImage.Length > 2 * 1024 * 1024)
+                {
+                    ModelState.AddModelError("ProfileImage", "File size must be less than 2MB");
+                    return View(user);
+                }
+
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "profiles");
+                Directory.CreateDirectory(uploadsFolder);
+                string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfileImage.FileName);
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await ProfileImage.CopyToAsync(fileStream);
+                }
+
+                user.ProfileImageUrl = "/uploads/profiles/" + uniqueFileName;
+            }
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Profile", new { id = userId });

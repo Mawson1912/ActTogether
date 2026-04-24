@@ -1,6 +1,7 @@
 @{
     ViewData["Title"] = "Messages";
     var userNames = ViewBag.UserNames as Dictionary<int, string>;
+    var profileImageUrls = ViewBag.ProfileImageUrls as Dictionary<int, string?>;
     var conversations = ViewBag.Conversations as dynamic;
 }
 
@@ -25,9 +26,16 @@
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div class="me-3">
-                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                    <span class="text-white" style="font-size: 1.25rem;">@name.Substring(0, 1).ToUpper()</span>
-                                </div>
+                                @if (!string.IsNullOrEmpty(profileImageUrls?[otherId]))
+                                {
+                                    <img src="@profileImageUrls[otherId]" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                        <span class="text-white" style="font-size: 1.25rem;">@name.Substring(0, 1).ToUpper()</span>
+                                    </div>
+                                }
                             </div>
                             <div>
                                 <strong class="text-dark">@name</strong>

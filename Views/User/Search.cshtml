@@ -27,12 +27,26 @@
 
             <div class="card mb-2">
                 <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <strong>@user.Username</strong>
-                        @if (!string.IsNullOrEmpty(user.FullName))
-                        {
-                            <span class="text-muted">- @user.FullName</span>
-                        }
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            @if (!string.IsNullOrEmpty(user.ProfileImageUrl))
+                            {
+                                <img src="@user.ProfileImageUrl" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <span class="text-white" style="font-size: 1.25rem;">@user.Username.Substring(0, 1).ToUpper()</span>
+                                </div>
+                            }
+                        </div>
+                        <div>
+                            <strong>@user.Username</strong>
+                            @if (!string.IsNullOrEmpty(user.FullName))
+                            {
+                                <span class="text-muted">- @user.FullName</span>
+                            }
+                        </div>
                     </div>
                     <div>
                         @if (fs == null)

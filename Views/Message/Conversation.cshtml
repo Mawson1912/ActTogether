@@ -10,9 +10,16 @@
 
     <div class="d-flex align-items-center mb-3">
         <div class="me-3">
-            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                <span class="text-white" style="font-size: 1.5rem;">@otherUser?.Username.Substring(0, 1).ToUpper()</span>
-            </div>
+            @if (!string.IsNullOrEmpty(otherUser?.ProfileImageUrl))
+            {
+                <img src="@otherUser.ProfileImageUrl" alt="Profile" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;" />
+            }
+            else
+            {
+                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                    <span class="text-white" style="font-size: 1.5rem;">@otherUser?.Username.Substring(0, 1).ToUpper()</span>
+                </div>
+            }
         </div>
         <div>
             <h3 class="mb-0">Conversation with @otherUser?.Username</h3>

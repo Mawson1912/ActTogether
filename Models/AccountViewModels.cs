@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace ActTogether.Models
 {
@@ -41,5 +42,7 @@ namespace ActTogether.Models
 
         [StringLength(500)]
         public string Bio { get; set; }
+
+        public IFormFile ProfileImage { get; set; }
     }
 }
