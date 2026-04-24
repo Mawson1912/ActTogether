@@ -1,0 +1,20 @@
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="mb-0">&copy; 2026 - ActTogether</p>
+                <p class="mb-0 text-muted">Dublin, Ireland</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-action="About" asp-controller="Home" class="text-decoration-none me-3">About</a>
+                    <a asp-action="ContactUs" asp-controller="Home" class="text-decoration-none me-3">Contact Us</a>
+                }
+                <a href="https://facebook.com" target="_blank" class="text-decoration-none me-2" aria-label="Facebook">📘</a>
+                <a href="https://twitter.com" target="_blank" class="text-decoration-none me-2" aria-label="Twitter">🐦</a>
+                <a href="https://instagram.com" target="_blank" class="text-decoration-none me-2" aria-label="Instagram">📷</a>
+            </div>
+        </div>
+    </div>
+</footer>
