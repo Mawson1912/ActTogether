@@ -31,10 +31,10 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Friendship" asp-action="Friends">Friends</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Friendship" asp-action="Requests">Requests</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Friendship" asp-action="Requests">Requests <span id="pending-badge" class="badge bg-danger" style="display:none;"></span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Message" asp-action="Inbox">Messages</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Message" asp-action="Inbox">Messages <span id="unread-badge" class="badge bg-danger" style="display:none;"></span></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Post" asp-action="MyVideos">My Videos</a>

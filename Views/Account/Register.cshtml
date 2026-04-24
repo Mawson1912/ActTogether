@@ -1,46 +1,66 @@
+@model ActTogether.Models.RegisterViewModel
 @{
     ViewData["Title"] = "Register";
     Layout = "_Layout";
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6">
+<div class="row align-items-center" style="min-height: 75vh;">
+    <div class="col-md-5 mb-4 mb-md-0">
+        <div class="hero-welcome p-4">
+            <h1 class="display-5 fw-bold mb-3">Join the Community</h1>
+            <p class="lead text-muted">Create your profile, connect with other actors, and start sharing your work today.</p>
+            <hr class="my-4" />
+            <ul class="list-unstyled text-muted">
+                <li class="mb-2"><strong>Your profile</strong> &mdash; Showcase who you are and what you do</li>
+                <li class="mb-2"><strong>Your tapes</strong> &mdash; A private library of your self-tapes with feedback</li>
+                <li class="mb-2"><strong>Your network</strong> &mdash; Build a trusted circle of fellow actors</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6 offset-md-1">
         <div class="card">
             <div class="card-header">
                 <h3 class="text-center">Register</h3>
             </div>
             <div class="card-body">
                 <form asp-action="Register" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div asp-validation-summary="All" class="text-danger"></div>
                     
                     <div class="form-group mb-3">
-                        <label for="Username" class="control-label">Username</label>
-                        <input name="Username" class="form-control" />
+                        <label asp-for="Username" class="control-label"></label>
+                        <input asp-for="Username" class="form-control" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label for="Email" class="control-label">Email</label>
-                        <input name="Email" type="email" class="form-control" />
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" type="email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label for="Password" class="control-label">Password</label>
-                        <input name="Password" type="password" class="form-control" />
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control" type="password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                        <small class="text-muted">Minimum 6 characters</small>
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label for="ConfirmPassword" class="control-label">Confirm Password</label>
-                        <input name="ConfirmPassword" type="password" class="form-control" />
+                        <label asp-for="ConfirmPassword" class="control-label"></label>
+                        <input asp-for="ConfirmPassword" class="form-control" type="password" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label for="FullName" class="control-label">Full Name</label>
-                        <input name="FullName" class="form-control" />
+                        <label asp-for="FullName" class="control-label"></label>
+                        <input asp-for="FullName" class="form-control" />
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label for="Bio" class="control-label">Bio</label>
-                        <textarea name="Bio" class="form-control" rows="3"></textarea>
+                        <label asp-for="Bio" class="control-label"></label>
+                        <textarea asp-for="Bio" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Bio" class="text-danger"></span>
+                        <small class="text-muted">Maximum 500 characters</small>
                     </div>
                     
                     <div class="form-group">

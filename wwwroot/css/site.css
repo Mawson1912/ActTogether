@@ -1,3 +1,37 @@
+/* Custom CSS on top of the sketchy template from Bootswatch */
+
+/* Main content wrapper - 60% width for better readability (not for profile views) */
+.main-content {
+  max-width: 60%;
+  margin: 0 auto;
+}
+
+/* Body and footer positioning to keep footer at bottom */
+html {
+  position: relative;
+  min-height: 100vh;
+}
+
+body {
+  margin-bottom: 60px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  margin-top: auto;
+}
+
+/* Video thumbnails - fill container snugly */
+.img-fluid.rounded {
+  border: 1px solid #eee;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Font sizes */
 html {
   font-size: 14px;
 }
@@ -8,15 +42,7 @@ html {
   }
 }
 
+/* Focus styles */
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
 }
