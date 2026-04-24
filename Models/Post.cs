@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ActTogether.Models
 {
     public class Post
@@ -8,5 +10,8 @@ namespace ActTogether.Models
         public string VideoUrl { get; set; }
         public string Description { get; set; }
         public DateTime PostedAt { get; set; }
+
+        [ForeignKey("UserId")]
+        public User User { get; set; }
     }
 }
