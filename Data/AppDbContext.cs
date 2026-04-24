@@ -15,5 +15,6 @@ namespace ActTogether.Data
         public DbSet<ContactMessage> ContactMessages { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<DismissedPost> DismissedPosts { get; set; }
     }
 }

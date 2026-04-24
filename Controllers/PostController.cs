@@ -55,6 +55,7 @@ namespace ActTogether.Controllers
             if (post != null)
             {
                 _context.Feedbacks.RemoveRange(_context.Feedbacks.Where(f => f.PostId == id));
+                _context.DismissedPosts.RemoveRange(_context.DismissedPosts.Where(d => d.PostId == id));
                 _context.Posts.Remove(post);
                 await _context.SaveChangesAsync();
             }
@@ -117,6 +118,29 @@ namespace ActTogether.Controllers
 
             _context.Feedbacks.Add(feedback);
             await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        // POST: /Post/Dismiss — hides a friend's post from your feed
+        [HttpPost]
+        public async Task<IActionResult> Dismiss(int postId)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var already = await _context.DismissedPosts
+                .AnyAsync(d => d.UserId == userId && d.PostId == postId);
+
+            if (!already)
+            {
+                _context.DismissedPosts.Add(new DismissedPost
+                {
+                    UserId = userId,
+                    PostId = postId,
+                    DismissedAt = DateTime.Now
+                });
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToAction("Index", "Home");
         }
