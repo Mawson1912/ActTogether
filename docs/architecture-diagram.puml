@@ -1,0 +1,81 @@
+@startuml ActTogether Architecture Diagram
+
+title ActTogether - High-Level Architecture
+
+actor "User" as User
+
+package "Client Browser" {
+    component "Web Browser" as Browser
+}
+
+package "ASP.NET Core MVC Application" {
+    component "Presentation Layer\n(Razor Views + Static Assets)" as Presentation
+    component "Controller Layer\n(MVC Controllers + API Controllers)" as Controllers
+    component "Model Layer\n(Domain Models + ViewModels)" as Models
+    component "Data Access Layer\n(Entity Framework Core)" as DAL
+    component "Authentication\n(ASP.NET Core Identity)" as Auth
+}
+
+package "Database Server" {
+    database "SQL Server\n(0001_ActTogether)" as Database
+}
+
+' Relationships
+User --> Browser : Uses
+Browser --> Presentation : HTTP Requests
+Presentation --> Controllers : HTTP Requests
+Controllers --> Models : Uses
+Controllers --> DAL : Queries
+Controllers --> Auth : Authentication/Authorization
+DAL --> Database : CRUD Operations
+Models --> Database : Mapped to Tables
+
+' Data flow notes
+note right of Browser
+  Renders HTML/CSS/JS
+  Sends AJAX requests
+  to API endpoints
+end note
+
+note right of Controllers
+  MVC Controllers handle
+  page requests
+  API Controllers handle
+  RESTful endpoints
+end note
+
+note right of DAL
+  ORM with dependency
+  injection, handles
+  database operations
+end note
+
+note right of Database
+  Stores Users, Posts,
+  Friendships, Messages,
+  Feedback, Reports, etc.
+end note
+
+note bottom of Auth
+  Cookie-based authentication
+  Role-based authorization
+  (Admin/User roles)
+end note
+
+' Styling
+skinparam component {
+    BackgroundColor LightBlue
+    BorderColor Blue
+}
+
+skinparam database {
+    BackgroundColor LightYellow
+    BorderColor Orange
+}
+
+skinparam actor {
+    BackgroundColor LightGreen
+    BorderColor Green
+}
+
+@enduml
