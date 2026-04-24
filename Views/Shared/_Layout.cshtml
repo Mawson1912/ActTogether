@@ -54,7 +54,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ContactUs">Contact Us</a>
                             </li>
                             <li class="nav-item">
-                                <span class="nav-link text-dark">Welcome, @User.Identity.Name!</span>
+                                <a class="nav-link text-dark" asp-controller="User" asp-action="Profile" asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">Welcome, @User.Identity.Name!</a>
                             </li>
                             <li class="nav-item">
                                 <form class="d-inline" asp-action="Logout" asp-controller="Account" method="post">
