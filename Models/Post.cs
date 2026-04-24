@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ActTogether.Models
@@ -8,6 +9,7 @@ namespace ActTogether.Models
         public int UserId { get; set; }
         public string Title { get; set; }
         public string VideoUrl { get; set; }
+        [MaxLength(500)]
         public string Description { get; set; }
         public DateTime PostedAt { get; set; }
 
