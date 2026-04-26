@@ -237,6 +237,17 @@ VALUES (1, 4, 'This user is posting inappropriate content and spamming the platf
 
 ---
 
+-- to check all tables are added correctly
+
+SELECT * FROM Users;
+SELECT * FROM Friendships;
+SELECT * FROM Posts;
+SELECT * FROM Messages;
+SELECT * FROM ContactMessages;
+SELECT * FROM Reports;
+SELECT * FROM Feedbacks;
+SELECT * FROM DismissedPosts;
+
 /* Step 4: Configure Application
 
 1. Open `appsettings.json` in the ActTogether project
