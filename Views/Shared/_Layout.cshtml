@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ActTogether</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -19,30 +19,30 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Feed</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Search">Search</a>
-                        </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Friendship" asp-action="Friends">Friends</a>
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Feed</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Friendship" asp-action="Requests">Requests <span id="pending-badge" class="badge bg-danger" style="display:none;"></span></a>
+                                <a class="nav-link" asp-controller="Friendship" asp-action="Friends">Friends</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Message" asp-action="Inbox">Messages <span id="unread-badge" class="badge bg-danger" style="display:none;"></span></a>
+                                <a class="nav-link" asp-controller="Friendship" asp-action="Requests">Requests <span id="pending-badge" class="badge bg-danger" style="display:none;"></span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Post" asp-action="MyVideos">My Videos</a>
+                                <a class="nav-link" asp-controller="User" asp-action="Search">Search</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Message" asp-action="Inbox">Messages <span id="unread-badge" class="badge bg-danger" style="display:none;"></span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Post" asp-action="MyVideos">My Videos</a>
                             </li>
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Admin" asp-action="Dashboard">Admin</a>
+                                    <a class="nav-link" asp-controller="Admin" asp-action="Dashboard">Admin</a>
                                 </li>
                             }
                         }
@@ -51,24 +51,21 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ContactUs">Contact Us</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="User" asp-action="Profile" asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">Welcome, @User.Identity.Name!</a>
+                                <a class="nav-link" asp-controller="User" asp-action="Profile" asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">Welcome, @User.Identity.Name!</a>
                             </li>
                             <li class="nav-item">
                                 <form class="d-inline" asp-action="Logout" asp-controller="Account" method="post">
-                                    <button type="submit" class="btn btn-link nav-link text-dark">Logout</button>
+                                    <button type="submit" class="btn btn-link nav-link">Logout</button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
                             </li>
                         }
                     </ul>

@@ -48,7 +48,7 @@ namespace ActTogether.Controllers
 
         // POST: /Friendship/SendRequest/5
         [HttpPost]
-        public async Task<IActionResult> SendRequest(int id)
+        public async Task<IActionResult> SendRequest(int id, string returnUrl = null)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
@@ -61,7 +61,7 @@ namespace ActTogether.Controllers
             {
                 if (existing.Status == "Blocked" && existing.BlockedBy != userId)
                     TempData["Message"] = "Unable to send friend request.";
-                return RedirectToAction("Profile", "User", new { id });
+                return Redirect(returnUrl ?? Url.Action("Profile", "User", new { id }));
             }
 
             var friendship = new Friendship
@@ -76,7 +76,9 @@ namespace ActTogether.Controllers
             _context.Friendships.Add(friendship);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Profile", "User", new { id });
+            TempData["Message"] = "Friend request sent";
+
+            return Redirect(returnUrl ?? Url.Action("Profile", "User", new { id }));
         }
 
         // POST: /Friendship/Accept/5

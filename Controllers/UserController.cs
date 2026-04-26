@@ -32,9 +32,8 @@ namespace ActTogether.Controllers
                     (f.User1Id == currentUserId && f.User2Id == id) ||
                     (f.User1Id == id && f.User2Id == currentUserId));
 
-            bool isFriend = friendshipStatus != null && friendshipStatus.Status == "Accepted";
-
             // Only show posts to the user themselves or confirmed friends
+            bool isFriend = friendshipStatus != null && friendshipStatus.Status == "Accepted";
             var posts = new List<Post>();
             if (currentUserId == id || isFriend)
             {
@@ -45,10 +44,10 @@ namespace ActTogether.Controllers
             }
 
             ViewBag.Posts = posts;
+            ViewBag.IsFriend = isFriend;
+            ViewBag.FriendshipStatus = friendshipStatus;
             ViewBag.CurrentUserId = currentUserId;
             ViewBag.IsOwnProfile = currentUserId == id;
-            ViewBag.FriendshipStatus = friendshipStatus;
-            ViewBag.IsFriend = isFriend;
 
             return View(user);
         }
@@ -150,7 +149,7 @@ namespace ActTogether.Controllers
             _context.Reports.Add(report);
             await _context.SaveChangesAsync();
 
-            TempData["Message"] = "User reported successfully.";
+            TempData["Message"] = "Report submitted. Thank you.";
             return RedirectToAction("Profile", new { id = reportedUserId });
         }
     }

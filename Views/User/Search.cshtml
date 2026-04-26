@@ -10,6 +10,14 @@
 
     <h3>Search Users</h3>
 
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <form asp-action="Search" method="get" class="mb-4">
         <div class="input-group">
             <input name="query" value="@ViewBag.Query" class="form-control" placeholder="Search by username or name..." />
@@ -51,7 +59,7 @@
                     <div>
                         @if (fs == null)
                         {
-                            <form asp-action="SendRequest" asp-controller="Friendship" asp-route-id="@user.Id" method="post" class="d-inline">
+                            <form asp-action="SendRequest" asp-controller="Friendship" asp-route-id="@user.Id" asp-route-returnUrl="@Context.Request.Path" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-sm btn-success me-1">Add Friend</button>
                             </form>
                         }

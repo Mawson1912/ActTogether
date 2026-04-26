@@ -1,11 +1,11 @@
 @model ActTogether.Models.User
 @{
     ViewData["Title"] = Model.Username + "'s Profile";
+    var posts = ViewBag.Posts as List<ActTogether.Models.Post>;
     var friendship = ViewBag.FriendshipStatus as ActTogether.Models.Friendship;
     bool isOwn = ViewBag.IsOwnProfile;
     bool isFriend = ViewBag.IsFriend;
     int currentUserId = ViewBag.CurrentUserId;
-    var posts = ViewBag.Posts as List<ActTogether.Models.Post>;
 }
 
 <a href="javascript:history.back()" class="btn btn-sm btn-outline-secondary mb-3">&larr; Back</a>
@@ -60,7 +60,7 @@
                 else if (friendship.Status == "Accepted")
                 {
                     <span class="badge bg-success me-2">Friends</span>
-                    <a asp-action="Conversation" asp-controller="Message" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary me-2">Message</a>
+                    <a asp-action="Conversation" asp-controller="Message" asp-route-id="@Model.Id" class="btn btn-sm btn-primary me-1">Message</a>
                     <form asp-action="Remove" asp-controller="Friendship" asp-route-id="@Model.Id" method="post" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-outline-danger">Remove Friend</button>
                     </form>
@@ -133,8 +133,8 @@
                                 </div>
                             }
                             <span class="text-muted small float-end me-2">@post.PostedAt.ToString("dd MMM yyyy")</span>
+                        </div>
                     </div>
-                </div>
             }
         }
         else if (!isOwn && !isFriend)
@@ -147,14 +147,3 @@
         }
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        function deletePost(postId, btn) {
-            if (confirm('Delete this post?')) {
-                fetch('/Post/Delete/' + postId, { method: 'POST' })
-                    .then(() => window.location.reload());
-            }
-        }
-    </script>
-}

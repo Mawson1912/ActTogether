@@ -1,23 +1,22 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using ActTogether.Models;
 using ActTogether.Data;
 using ActTogether.Helpers;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
-using System.Diagnostics;
-using System.Security.Claims;
 
 namespace ActTogether.Controllers
 {
+    // Handles home feed, contact page, and error display
     public class HomeController : Controller
     {
         private readonly AppDbContext _context;
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(AppDbContext context, ILogger<HomeController> logger)
+        public HomeController(AppDbContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
         [Authorize]
@@ -78,12 +77,14 @@ namespace ActTogether.Controllers
             return View();
         }
 
+        // GET: /Home/ContactUs
         [Authorize]
         public IActionResult ContactUs()
         {
             return View();
         }
 
+        // POST: /Home/ContactUs — saves to database for admin review
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> ContactUs(string message)

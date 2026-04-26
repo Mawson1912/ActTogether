@@ -1,7 +1,4 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Fetch unread message count from API and update nav badge
+﻿// Fetch unread message count from API and update nav badge
 function loadUnreadCount() {
     fetch('/api/UsersApi/unread')
         .then(response => response.json())

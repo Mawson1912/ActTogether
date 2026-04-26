@@ -74,43 +74,32 @@
             </div>
         </div>
     }
-
-        @if (totalPages > 1)
-        {
-            <nav>
-                <ul class="pagination justify-content-center mt-4">
-                    @if (currentPage > 1)
-                    {
-                        <li class="page-item"><a class="page-link" asp-action="MyVideos" asp-route-page="@(currentPage - 1)">&laquo; Prev</a></li>
-                    }
-                    @for (int i = 1; i <= totalPages; i++)
-                    {
-                        <li class="page-item @(i == currentPage ? "active" : "")"><a class="page-link" asp-action="MyVideos" asp-route-page="@i">@i</a></li>
-                    }
-                    @if (currentPage < totalPages)
-                    {
-                        <li class="page-item"><a class="page-link" asp-action="MyVideos" asp-route-page="@(currentPage + 1)">Next &raquo;</a></li>
-                    }
-                </ul>
-            </nav>
-        }
-    }
-    else
-    {
-        <div class="text-center mt-5">
-            <h4>No videos yet!</h4>
-            <p class="text-muted">Share your first video to get feedback from friends.</p>
-        </div>
-    }
-</div>
-
-@section Scripts {
-    <script>
-        function deletePost(postId, btn) {
-            if (confirm('Delete this post?')) {
-                fetch('/Post/Delete/' + postId, { method: 'POST' })
-                    .then(() => window.location.reload());
-            }
-        }
-    </script>
 }
+else
+{
+    <div class="text-center mt-5">
+        <h4>No videos yet!</h4>
+        <p class="text-muted">Share your first video to get feedback from friends.</p>
+    </div>
+}
+
+@if (totalPages > 1)
+{
+    <nav>
+        <ul class="pagination justify-content-center mt-4">
+            @if (currentPage > 1)
+            {
+                <li class="page-item"><a class="page-link" asp-action="MyVideos" asp-route-page="@(currentPage - 1)">&laquo; Prev</a></li>
+            }
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")"><a class="page-link" asp-action="MyVideos" asp-route-page="@i">@i</a></li>
+            }
+            @if (currentPage < totalPages)
+            {
+                <li class="page-item"><a class="page-link" asp-action="MyVideos" asp-route-page="@(currentPage + 1)">Next &raquo;</a></li>
+            }
+        </ul>
+    </nav>
+}
+</div>
