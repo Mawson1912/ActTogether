@@ -33,9 +33,9 @@ namespace ActTogether.Controllers
             var post = new Post
             {
                 UserId = userId,
-                Title = model.Title,
-                VideoUrl = model.VideoUrl,
-                Description = model.Description,
+                Title = model.Title?.Length > 200 ? model.Title.Substring(0, 200) : model.Title,
+                VideoUrl = model.VideoUrl?.Length > 500 ? model.VideoUrl.Substring(0, 500) : model.VideoUrl,
+                Description = model.Description?.Length > 2000 ? model.Description.Substring(0, 2000) : model.Description,
                 PostedAt = DateTime.Now
             };
 
@@ -112,7 +112,7 @@ namespace ActTogether.Controllers
             {
                 PostId = postId,
                 SenderId = userId,
-                Content = content,
+                Content = content?.Length > 2000 ? content.Substring(0, 2000) : content,
                 CreatedAt = DateTime.Now
             };
 

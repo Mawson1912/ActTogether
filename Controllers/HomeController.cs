@@ -94,7 +94,7 @@ namespace ActTogether.Controllers
             var contactMessage = new ContactMessage
             {
                 UserId = userId,
-                Message = message,
+                Message = message?.Length > 2000 ? message.Substring(0, 2000) : message,
                 SentAt = DateTime.Now
             };
 

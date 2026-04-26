@@ -69,8 +69,8 @@ namespace ActTogether.Controllers
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null) return NotFound();
 
-            user.FullName = model.FullName;
-            user.Bio = model.Bio;
+            user.FullName = model.FullName?.Length > 100 ? model.FullName.Substring(0, 100) : model.FullName;
+            user.Bio = model.Bio?.Length > 500 ? model.Bio.Substring(0, 500) : model.Bio;
 
             if (ProfileImage != null)
             {
@@ -142,7 +142,7 @@ namespace ActTogether.Controllers
             {
                 ReporterId = currentUserId,
                 ReportedUserId = reportedUserId,
-                Reason = reason,
+                Reason = reason?.Length > 500 ? reason.Substring(0, 500) : reason,
                 CreatedAt = DateTime.Now
             };
 

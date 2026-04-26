@@ -101,7 +101,7 @@ namespace ActTogether.Controllers
             {
                 SenderId = userId,
                 ReceiverId = receiverId,
-                Content = content,
+                Content = content?.Length > 2000 ? content.Substring(0, 2000) : content,
                 SentAt = DateTime.Now,
                 IsRead = false
             };
