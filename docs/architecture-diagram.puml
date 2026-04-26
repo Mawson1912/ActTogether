@@ -13,7 +13,7 @@ package "ASP.NET Core MVC Application" {
     component "Controller Layer\n(MVC Controllers + API Controllers)" as Controllers
     component "Model Layer\n(Domain Models + ViewModels)" as Models
     component "Data Access Layer\n(Entity Framework Core)" as DAL
-    component "Authentication\n(ASP.NET Core Identity)" as Auth
+    component "Authentication\n(Cookie-based with Claims)" as Auth
 }
 
 package "Database Server" {
@@ -23,7 +23,7 @@ package "Database Server" {
 ' Relationships
 User --> Browser : Uses
 Browser --> Presentation : HTTP Requests
-Presentation --> Controllers : HTTP Requests
+Presentation --> Controllers : Renders Views
 Controllers --> Models : Uses
 Controllers --> DAL : Queries
 Controllers --> Auth : Authentication/Authorization
