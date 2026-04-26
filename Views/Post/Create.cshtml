@@ -15,16 +15,16 @@
                     <form asp-action="Create" method="post">
                         <div class="form-group mb-3">
                             <label class="control-label">Title</label>
-                            <input name="Title" class="form-control" required />
+                            <input name="Title" class="form-control" maxlength="200" required />
                         </div>
                         <div class="form-group mb-3">
                             <label class="control-label">Google Drive Video URL</label>
-                            <input name="VideoUrl" class="form-control" placeholder="https://drive.google.com/..." required />
+                            <input name="VideoUrl" class="form-control" placeholder="https://drive.google.com/..." maxlength="500" required />
                         </div>
                         <div class="form-group mb-3">
                             <label class="control-label">Description</label>
-                            <textarea name="Description" class="form-control" rows="3" maxlength="500"></textarea>
-                            <small class="text-muted">Maximum 500 characters</small>
+                            <textarea name="Description" class="form-control" rows="3" maxlength="2000"></textarea>
+                            <small class="text-muted">Maximum 2000 characters</small>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Share Video</button>
                     </form>
