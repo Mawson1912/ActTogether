@@ -117,15 +117,15 @@ Login credentials (all passwords: Password123!):**
 
 
 -- Regular users
-INSERT INTO Users (Username, Email, PasswordHash, FullName, Bio, CreatedAt, IsAdmin)
+INSERT INTO Users (Username, Email, PasswordHash, FullName, Bio, ProfileImageUrl, CreatedAt, IsAdmin)
 VALUES
-('alice', 'alice@example.com', '$2a$12$WI9R9t3fKjlJGjCgU6CCx.2VytpL7gkH/yRydKElV.9fFxpqBnOoi', 'Alice Smith', 'Professional actor based in Dublin. Specializing in drama and thriller roles. Recently booked a supporting role in a BBC series.', DATEADD(day, -30, GETDATE()), 0),
-('bob', 'bob@example.com', '$2a$12$WI9R9t3fKjlJGjCgU6CCx.2VytpL7gkH/yRydKElV.9fFxpqBnOoi', 'Bob Johnson', 'Working actor from Cork. Focus on commercial and TV pilot auditions. Always refining my self-tape setup.', DATEADD(day, -25, GETDATE()), 0),
-('charlie', 'charlie@example.com', '$2a$12$WI9R9t3fKjlJGjCgU6CCx.2VytpL7gkH/yRydKElV.9fFxpqBnOoi', 'Charlie Brown', 'Stage and screen actor based in Galway. Trained at The Lir. Currently auditioning for feature film roles.', DATEADD(day, -20, GETDATE()), 0),
-('dave', 'dave@example.com', '$2a$12$WI9R9t3fKjlJGjCgU6CCx.2VytpL7gkH/yRydKElV.9fFxpqBnOoi', 'Dave Wilson', 'New to professional acting. Building my self-tape portfolio and learning the industry.', DATEADD(day, -15, GETDATE()), 0),
+('alice', 'alice@example.com', '$2a$12$WI9R9t3fKjlJGjCgU6CCx.2VytpL7gkH/yRydKElV.9fFxpqBnOoi', 'Alice Smith', 'Professional actor based in Dublin. Specializing in drama and thriller roles. Recently booked a supporting role in a BBC series.', '/uploads/profiles/pic-alice.jpg', DATEADD(day, -30, GETDATE()), 0),
+('bob', 'bob@example.com', '$2a$12$WI9R9t3fKjlJGjCgU6CCx.2VytpL7gkH/yRydKElV.9fFxpqBnOoi', 'Bob Johnson', 'Working actor from Cork. Focus on commercial and TV pilot auditions. Always refining my self-tape setup.', '/uploads/profiles/pic-bob.jpg', DATEADD(day, -25, GETDATE()), 0),
+('charlie', 'charlie@example.com', '$2a$12$WI9R9t3fKjlJGjCgU6CCx.2VytpL7gkH/yRydKElV.9fFxpqBnOoi', 'Charlie Brown', 'Stage and screen actor based in Galway. Trained at The Lir. Currently auditioning for feature film roles.', '/uploads/profiles/pic-charlie.jpg', DATEADD(day, -20, GETDATE()), 0),
+('dave', 'dave@example.com', '$2a$12$WI9R9t3fKjlJGjCgU6CCx.2VytpL7gkH/yRydKElV.9fFxpqBnOoi', 'Dave Wilson', 'New to professional acting. Building my self-tape portfolio and learning the industry.', '/uploads/profiles/pic-dave.jpg', DATEADD(day, -15, GETDATE()), 0),
 
 -- Admin account (no posts, no friendships)
-('admin', 'admin@example.com', '$2a$12$WI9R9t3fKjlJGjCgU6CCx.2VytpL7gkH/yRydKElV.9fFxpqBnOoi', 'System Admin', 'Platform administrator.', DATEADD(day, -5, GETDATE()), 1);
+('admin', 'admin@example.com', '$2a$12$WI9R9t3fKjlJGjCgU6CCx.2VytpL7gkH/yRydKElV.9fFxpqBnOoi', 'System Admin', 'Platform administrator.', '/uploads/profiles/pic-admin.jpg', DATEADD(day, -5, GETDATE()), 1);
 
 
 -- Friendships (Alice, Bob, Charlie are friends; Dave has no friends)
