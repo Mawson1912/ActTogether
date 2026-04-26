@@ -1,27 +1,26 @@
-# ActTogether Database Setup
+-- ActTogether Database Setup
 
-This SQL file sets up the database and populates it with dummy data for demonstration purposes.
+-- This SQL file sets up the database and populates it with dummy data for demonstration purposes.
 
 ---
 
-## Step 1: Create Database
+-- Step 1: Create Database
 
-Open SQL Server Management Studio, connect to your local SQL Server instance (localhost or .\SQLEXPRESS), then run:
+-- Open SQL Server Management Studio, connect to your local SQL Server instance (localhost or .\SQLEXPRESS), then run:
 
-```sql
+
 -- Create the database (you can use any name, but "ActTogether" is recommended)
 CREATE DATABASE [ActTogether];
 GO
 
 USE [ActTogether];
 GO
-```
 
 ---
 
-## Step 2: Create Tables
+-- Step 2: Create Tables
 
-```sql
+
 -- Users table
 CREATE TABLE Users (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -99,22 +98,24 @@ CREATE TABLE DismissedPosts (
     PostId INT NOT NULL,
     DismissedAt DATETIME NOT NULL
 );
-```
 
 ---
 
-## Step 3: Insert Dummy Data
+-- Step 3: Insert Dummy Data
 
 -- Users (5 accounts)
 
-**Login credentials (all passwords: Password123!):**
+/* 
+Login credentials (all passwords: Password123!):**
 - alice / Password123!
 - bob / Password123!
 - charlie / Password123!
 - dave / Password123!
 - admin / Password123!
+*/
 
-```sql
+
+
 -- Regular users
 INSERT INTO Users (Username, Email, PasswordHash, FullName, Bio, CreatedAt, IsAdmin)
 VALUES
@@ -125,11 +126,11 @@ VALUES
 
 -- Admin account (no posts, no friendships)
 ('admin', 'admin@example.com', '$2a$12$WI9R9t3fKjlJGjCgU6CCx.2VytpL7gkH/yRydKElV.9fFxpqBnOoi', 'System Admin', 'Platform administrator.', DATEADD(day, -5, GETDATE()), 1);
-```
+
 
 -- Friendships (Alice, Bob, Charlie are friends; Dave has no friends)
 
-```sql
+
 -- Alice -> Bob (accepted)
 INSERT INTO Friendships (User1Id, User2Id, Status, RequestedBy, CreatedAt)
 VALUES (1, 2, 'Accepted', 1, DATEADD(day, -20, GETDATE()));
@@ -141,11 +142,10 @@ VALUES (1, 3, 'Accepted', 1, DATEADD(day, -18, GETDATE()));
 -- Bob -> Charlie (accepted)
 INSERT INTO Friendships (User1Id, User2Id, Status, RequestedBy, CreatedAt)
 VALUES (2, 3, 'Accepted', 2, DATEADD(day, -15, GETDATE()));
-```
+
 
 -- Posts (Each regular user posts 2 videos using the 8 Google Drive links - self-tape auditions for specific roles)
 
-```sql
 -- Alice's posts (videos 1, 2)
 INSERT INTO Posts (UserId, Title, VideoUrl, Description, PostedAt)
 VALUES
@@ -169,11 +169,9 @@ INSERT INTO Posts (UserId, Title, VideoUrl, Description, PostedAt)
 VALUES
 (4, 'Supporting Role - Indie Film', 'https://drive.google.com/file/d/1idozPBJHCDvuCAqY67N-lQJrmxr7jBjg/view?usp=drive_link', 'My first serious self-tape audition. Building confidence with the camera setup.', DATEADD(day, -12, GETDATE())),
 (4, 'Commercial - Brand Ambassador', 'https://drive.google.com/file/d/1ToT2Hecni2gyTthVMi478g3rxoFL6Xo5/view?usp=drive_link', 'Commercial audition. Working on being more natural and less rehearsed.', DATEADD(day, -3, GETDATE()));
-```
 
 -- Messages (Conversations between friends)
 
-```sql
 -- Alice to Bob
 INSERT INTO Messages (SenderId, ReceiverId, Content, SentAt, IsRead)
 VALUES (1, 2, 'Hey Bob! Just watched your commercial tape - the natural delivery was perfect. How did it go?', DATEADD(hour, -48, GETDATE()), 1);
@@ -189,11 +187,10 @@ VALUES (3, 1, 'Congrats on booking that detective role! Your tape was incredible
 -- Alice to Charlie
 INSERT INTO Messages (SenderId, ReceiverId, Content, SentAt, IsRead)
 VALUES (1, 3, 'Thanks! I spent a week researching real detectives. The key was making it feel lived-in, not performed.', DATEADD(hour, -23, GETDATE()), 1);
-```
+
 
 -- ContactMessages (Admin receives messages from users)
 
-```sql
 -- Alice contacts admin
 INSERT INTO ContactMessages (UserId, Message, SentAt)
 VALUES (1, 'Hi, I''m having trouble uploading my self-tape video. Is there a file size limit?', DATEADD(day, -2, GETDATE()));
@@ -205,11 +202,9 @@ VALUES (2, 'Feature request: It would be great to add a section for sharing audi
 -- Charlie contacts admin
 INSERT INTO ContactMessages (UserId, Message, SentAt)
 VALUES (3, 'Love the platform! It''s really helping me get feedback on my audition tapes.', DATEADD(hour, -6, GETDATE()));
-```
 
 -- Feedbacks (Friends give feedback on each other's posts)
 
-```sql
 -- Bob gives feedback on Alice's thriller audition
 INSERT INTO Feedbacks (PostId, SenderId, Content, CreatedAt)
 VALUES (2, 2, 'Great emotional range in the second scene! The vulnerability in the breakdown moment was perfect. Maybe add a slight pause before the final line to let it land.', DATEADD(hour, -40, GETDATE()));
@@ -233,19 +228,16 @@ VALUES (5, 1, 'The accent sounds solid! The rhythm of the speech feels right for
 -- Bob gives feedback on Charlie's action tape (successful audition)
 INSERT INTO Feedbacks (PostId, SenderId, Content, CreatedAt)
 VALUES (6, 2, 'The physical commitment is clear! That''s what sets action tapes apart. The intensity never felt forced - great work on the fight choreography timing.', DATEADD(hour, -12, GETDATE()));
-```
 
 -- Reports (Alice reports Dave)
 
-```sql
 -- Alice reports Dave
 INSERT INTO Reports (ReporterId, ReportedUserId, Reason, CreatedAt)
 VALUES (1, 4, 'This user is posting inappropriate content and spamming the platform.', DATEADD(day, -1, GETDATE()));
-```
 
 ---
 
-## Step 4: Configure Application
+/* Step 4: Configure Application
 
 1. Open `appsettings.json` in the ActTogether project
 2. Update the connection string to match your local SQL Server setup:
@@ -269,8 +261,7 @@ VALUES (1, 4, 'This user is posting inappropriate content and spamming the platf
 ## Step 5: Run the Application
 
 1. Open the project in Visual Studio or run `dotnet run` in the project directory
-2. Navigate to `https://localhost:5001` (or the port shown in the console)
-3. Log in using the credentials listed above
+2. Log in using the credentials listed above
 
 ---
 
@@ -290,3 +281,5 @@ VALUES (1, 4, 'This user is posting inappropriate content and spamming the platf
 - **Profile Pictures:** Place profile images in `wwwroot/uploads/profiles/` and update the ProfileImageUrl column in the Users table if desired
 - **BCrypt Passwords:** All dummy accounts use the same password "Password123!" (BCrypt hash: $2a$12$WI9R9t3fKjlJGjCgU6CCx.2VytpL7gkH/yRydKElV.9fFxpqBnOoi)
 - **Video Links:** The dummy posts use Google Drive links from `Links-for-videos.md`
+
+*/
